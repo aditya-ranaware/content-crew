@@ -1,0 +1,7 @@
+.env
+venv/
+__pycache__/
+*.db
+output.md
+node_modules/
+dist/

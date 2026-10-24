@@ -1,0 +1,10 @@
+crewai[google-genai]
+fastapi
+uvicorn[standard]
+sqlalchemy
+pyjwt
+python-dotenv
+ddgs
+requests
+beautifulsoup4
+psycopg[binary]
