@@ -21,6 +21,8 @@ export function parseArticle(md) {
 }
 
 export function friendlyError(message = "") {
+  if (/no sources found/i.test(message))
+    return { title: "No sources found for this topic", hint: "Try a more specific topic, for example add the year or the full names. If this keeps happening, the search service may be down." };
   if (/already have an article in progress/i.test(message))
     return { title: "An article is already being written", hint: "Wait for it to finish, then try again. Only one article can be written at a time." };
   if (/rate.?limit|429|413|tokens per minute/i.test(message))

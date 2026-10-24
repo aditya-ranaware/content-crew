@@ -68,6 +68,8 @@ def run_content_crew(topic, tone="professional", audience="general readers",
 
     english = english_query(topic, language)
     sources = gather_sources(topic, str(date.today()), english)
+    if sources.startswith("NO SOURCES FOUND"):
+        raise RuntimeError("No sources found for this topic. Try a more specific topic.")
     last_error = None
 
     for round_no in range(2):
