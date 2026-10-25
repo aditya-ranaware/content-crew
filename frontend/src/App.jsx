@@ -104,7 +104,12 @@ function Workspace({ user, onLogout }) {
       <div className="print-reset flex min-w-0 flex-1 flex-col">
         <header className="no-print flex h-14 shrink-0 items-center gap-3 border-b border-line bg-bg/80 px-4 backdrop-blur">
           <button onClick={() => setMenu(true)} aria-label="Open article history" className="rounded-md p-1.5 hover:bg-sunken lg:hidden"><Menu size={20} aria-hidden="true" /></button>
-          <p className="min-w-0 flex-1 truncate text-sm font-medium">{idle ? "New article" : form.topic}</p>
+                    <p className="min-w-0 flex-1 truncate text-sm font-medium">{idle ? "New article" : form.topic}</p>
+          {gen.status === "done" && (
+            <button onClick={newArticle} className="flex items-center gap-1.5 rounded-lg border border-line px-3 py-1.5 text-sm transition hover:border-accent/60">
+              <Plus size={14} aria-hidden="true" /> New article
+            </button>
+          )}
           <button onClick={toggle} aria-label={dark ? "Switch to light mode" : "Switch to dark mode"} title={dark ? "Light mode" : "Dark mode"}
             className="rounded-lg border border-line p-2 text-muted transition hover:border-accent/60 hover:text-ink">
             {dark ? <Sun size={16} aria-hidden="true" /> : <Moon size={16} aria-hidden="true" />}
@@ -114,7 +119,7 @@ function Workspace({ user, onLogout }) {
         <main className={`print-reset min-h-0 flex-1 overflow-y-auto ${idle ? "hero-glow" : ""}`}>
           {idle && <Welcome form={form} setForm={setForm} onSubmit={submit} />}
 
-          {!idle && <BriefBar form={form} running={gen.status === "running"} onStop={gen.cancel} onNew={newArticle} />}
+          {!idle && gen.status !== "done" && <BriefBar form={form} running={gen.status === "running"} onStop={gen.cancel} onNew={newArticle} />}
           {gen.status === "running" && <CrewProgress completed={gen.completed} startedAt={gen.startedAt} />}
 
           {err && (
@@ -130,7 +135,7 @@ function Workspace({ user, onLogout }) {
             </div>
           )}
 
-          {gen.status === "done" && (<div className="pt-4"><ArticleView markdown={gen.result} lang={form.language} onNotify={notify} /></div>)}
+          {gen.status === "done" && <ArticleView markdown={gen.result} lang={form.language} form={form} onNotify={notify} />}
         </main>
       </div>
 

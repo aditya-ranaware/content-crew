@@ -44,12 +44,12 @@ export default function Composer({ form, setForm, onSubmit, autoFocus }) {
         </label>
         <label className={chip}>
           <Users size={14} className="text-muted" aria-hidden="true" />
-          <input aria-label="Audience" maxLength={80} className="w-32 bg-transparent outline-none placeholder:text-muted/70" placeholder="Audience" value={form.audience} onChange={(e) => set("audience")(e.target.value)} />
+          <input aria-label="Audience" maxLength={80} className="w-28 bg-transparent outline-none placeholder:text-muted/70" placeholder="Audience" value={form.audience} onChange={(e) => set("audience")(e.target.value)} />
         </label>
         <label className={chip}>
           <Gauge size={14} className="text-muted" aria-hidden="true" />
           <select aria-label="Length" className="bg-transparent outline-none" value={form.word_count} onChange={(e) => set("word_count")(Number(e.target.value))}>
-            {LENGTHS.map((l) => <option key={l.value} value={l.value}>{l.label} ({l.value} words)</option>)}
+            {LENGTHS.map((l) => <option key={l.value} value={l.value}>{l.label} ({l.value})</option>)}
           </select>
         </label>
         <div className="ml-auto flex items-center gap-3">

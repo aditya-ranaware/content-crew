@@ -12,12 +12,22 @@ export function parseArticle(md) {
     .replace(/\*\*SEO Title:\*\*.*\n?/i, "")
     .replace(/\*\*Meta Description:\*\*.*\n?/i, "")
     .trim();
+
   // The sources list is the last section. Its heading may be in any language.
   const heads = [...body.matchAll(/^#{1,3}\s+.+$/gm)];
   const last = heads[heads.length - 1];
   const block = last ? body.slice(last.index) : "";
   const sources = [...new Set((block.match(/https?:\/\/[^\s)>\]]+/g) || []).map((u) => u.replace(/[.,;]+$/, "")))];
-  return { title, desc, body, sources };
+  const hasSources = sources.length > 0;
+
+  return {
+    title,
+    desc,
+    body,
+    sources,
+    articleBody: hasSources ? body.slice(0, last.index).trim() : body,
+    sourcesTitle: hasSources ? last[0].replace(/^#+\s+/, "").trim() : "Sources",
+  };
 }
 
 export function friendlyError(message = "") {
@@ -25,11 +35,13 @@ export function friendlyError(message = "") {
     return { title: "No sources found for this topic", hint: "Try a more specific topic, for example add the year or the full names. If this keeps happening, the search service may be down." };
   if (/already have an article in progress/i.test(message))
     return { title: "An article is already being written", hint: "Wait for it to finish, then try again. Only one article can be written at a time." };
+  if (/all models are busy/i.test(message))
+    return { title: "The AI service is busy right now", hint: "This is temporary. Wait a few minutes and try again." };
   if (/rate.?limit|429|413|tokens per minute/i.test(message))
     return { title: "The AI provider's usage limit was reached", hint: "Wait a minute and try again, or set a model with a higher limit in the backend .env file." };
   if (/reach the server|lost connection/i.test(message))
-    return { title: "Can't reach the server", hint: "Check that the backend is running on port 8000, then try again." };
-  return { title: "The crew couldn't finish this article", hint: "Try again. If it keeps happening, shorten the topic or check the backend terminal for details." };
+    return { title: "Can't reach the server", hint: "Check that the backend is running, then try again." };
+  return { title: "The crew couldn't finish this article", hint: "Try again. If it keeps happening, shorten the topic or check the backend logs for details." };
 }
 
 export const slugify = (s) =>
